@@ -9,15 +9,12 @@
 }
 
 /*---TOP CONTAINERS---*/
-html, body{
+html{
     height: 100%;
 }
 
-html{
-    border: 4px solid brown;
-}
-
 body{
+    min-height: 100vh;
     border: 4px solid green;
 }
 
@@ -25,8 +22,8 @@ body{
 .calculator{
     width: 400px;
     height: 600px;
-    padding: 12px;
-    border: none;
+    padding: 16px;
+    border-radius: 5px;
     background-color: rgb(27, 27, 27);
     display: flex;
     flex-direction: column;
@@ -36,13 +33,12 @@ body{
 /*---calculator children---*/
 .display{
     flex: 1 0 0;
-    border: 2px solid blue;
+    border-radius: 5px;
     background-color: rgb(190, 190, 190);
 }
 
 .calculator-buttons{
     flex: 4 0 0;
-    border: 2px solid blue;
     display: flex;
     gap: 4px;
 }
@@ -50,7 +46,6 @@ body{
 /*---calculator button children---*/
 .input{
     flex: 3 0 0;
-    border: none;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -58,7 +53,6 @@ body{
 
 .operators{
     flex: 1 0 0;
-    border: none;
     display: flex;
     flex-direction: column;
 }
@@ -66,26 +60,23 @@ body{
 /*---input children---*/
 .digits{
     flex: 4.2 0 0;
-    border: none;
     display: flex;
     flex-direction: column;
 }
 
 .edit{
     flex: 1 0 0;
-    border: none;
     display: flex;
 }
 
 /*---digits and operators children---*/
-.row{
+.row, .cell{
     flex: 1 0 0;
     display: flex;
 }
 
-.cell{
-    flex: 1 0 0;
-    display: flex;
+.digits, .operators, .row{
+    gap: 2px;
 }
 
 .cell button{
@@ -97,7 +88,7 @@ body{
 }
 
 .operators button{
-    background-color: rgb(63, 76, 63);
+    background-color: rgb(70, 85, 70);
 }
 
 /*---edit children---*/
@@ -110,4 +101,5 @@ body{
 button{
     font-size: 25px;
     font-weight: 700;
+    border-radius: 5px;
 }
