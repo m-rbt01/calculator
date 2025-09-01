@@ -1,0 +1,113 @@
+/*---UNIVERSAL---*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    font-family: "Roboto", sans-serif;
+}
+
+/*---TOP CONTAINERS---*/
+html, body{
+    height: 100%;
+}
+
+html{
+    border: 4px solid brown;
+}
+
+body{
+    border: 4px solid green;
+}
+
+/*---MAIN CONTENT---*/
+.calculator{
+    width: 400px;
+    height: 600px;
+    padding: 12px;
+    border: none;
+    background-color: rgb(27, 27, 27);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/*---calculator children---*/
+.display{
+    flex: 1 0 0;
+    border: 2px solid blue;
+    background-color: rgb(190, 190, 190);
+}
+
+.calculator-buttons{
+    flex: 4 0 0;
+    border: 2px solid blue;
+    display: flex;
+    gap: 4px;
+}
+
+/*---calculator button children---*/
+.input{
+    flex: 3 0 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.operators{
+    flex: 1 0 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+}
+
+/*---input children---*/
+.digits{
+    flex: 4.2 0 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.edit{
+    flex: 1 0 0;
+    border: none;
+    display: flex;
+}
+
+/*---digits and operators children---*/
+.row{
+    flex: 1 0 0;
+    display: flex;
+}
+
+.cell{
+    flex: 1 0 0;
+    display: flex;
+}
+
+.cell button{
+    flex: 1 0 0;
+}
+
+.digits button{
+    background-color: rgb(146, 255, 146);
+}
+
+.operators button{
+    background-color: rgb(63, 76, 63);
+}
+
+/*---edit children---*/
+#clear-input{
+    flex: 1 0 0;
+    background-color: rgb(93, 112, 93);
+}
+
+/*---BUTTONS---*/
+button{
+    font-size: 25px;
+    font-weight: 700;
+}
