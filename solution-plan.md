@@ -35,7 +35,7 @@ Create a calculator program that evaluates a single arithmetic operation at a ti
 1. Get the first operand
 2. Get the operator
 3. Get the second operand
-4. Display the input as buttons are pressed
+4. Display the input when buttons are pressed
 5. Evaluate the operation when equals or second operator is pressed 
 6. Display the result
 7. After a result, clear the display when digits are pressed
@@ -60,5 +60,14 @@ ENDFUNCTION
 
 FUNCTION divide gets PASSED a dividend and a divisor
     RETURN the quotient of dividing dividend by divisor
+ENDFUNCTION
+
+FUNCTION operate gets PASSED two operands, and an operator
+    CASE operator OF
+        ADD: call add function with operands, return result
+        SUBTRACT: call subtract function with operands, return result
+        MULTIPLY: call multiply  with operands, return result
+        OTHERS: call divide with operands, return result
+    ENDCASE
 ENDFUNCTION
 ```
