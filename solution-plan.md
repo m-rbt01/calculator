@@ -41,3 +41,24 @@ Create a calculator program that evaluates a single arithmetic operation at a ti
 7. After a result, clear the display when digits are pressed
 
 ### ALGORITHM
+```
+DECLARE global operand 1 variable
+DECLARE global operand 2 variable
+DECLARE global operator variable
+
+FUNCTION add gets PASSED two addends
+    RETURN the sum of both addends
+ENDFUNCTION
+
+FUNCTION subtract gets PASSED a minuend and a subtrahend
+    RETURN the difference of minuend minus subtrahend
+ENDFUNCTION
+
+FUNCTION multiply gets PASSED a multiplicand and a multiplier
+    RETURN the product of multiplying multiplicand by multiplier
+ENDFUNCTION
+
+FUNCTION divide gets PASSED a dividend and a divisor
+    RETURN the quotient of dividing dividend by divisor
+ENDFUNCTION
+```
