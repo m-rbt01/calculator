@@ -45,6 +45,8 @@ Create a calculator program that evaluates a single arithmetic operation at a ti
 DECLARE global first operand variable
 DECLARE global second operand variable
 DECLARE global operator variable
+DECLARE global operator symbol variable
+DECLARE global result variable
 SET global previous operation to DOM previous operation div
 SET global output to DOM output div
 SET global digits to DOM digits container
@@ -68,26 +70,48 @@ ENDFUNCTION
 
 FUNCTION operate TAKES two operands, and an operator
     CASE operator OF
-        ADDITION: call add function with operands, return result
-        SUBTRACTION: call subtract function with operands, return result
-        MULTIPLICATION: call multiply  with operands, return result
-        DIVISION: call divide with operands, return result
+        ADDITION: call add function with operands, set to result
+        SUBTRACTION: call subtract function with operands, set to result
+        MULTIPLICATION: call multiply  with operands, set to result
+        DIVISION: call divide with operands, set to result
     ENDCASE
+    CALL display and PASS result
 ENDFUNCTION
 
-FUNCTION display TAKES string output
-    IF operator is empty THEN
-        SET first operand to its current content plus string output
-        SET output's text content to the first operand
-    ENDIF
+FUNCTION display TAKES display node and string output
+    SET display node's text content to the string output
+    
+    
+    
     ELSE
-        SET second operand to its current content plus string output
-        SET outputs text content to the first operand, operator, and second operand
+        SET previous operation text content to current output content
+        SET current output text content to the result
     ENDELSE
 ENDFUNCTION
 
+FUNCTION prepare operation TAKES digit click node
+    IF operator id is empty THEN
+        SET first operand to its current content plus digit node text content
+        CALL display and PASS output node and first operand
+    ENDIF
+    ELSE
+        SET second operand to its current content plus digit node text content
+        CALL display and PASS output node and first operand, operator symbol, second operand string
+    ENDELSE
+ENDFUNCTION
+
+FUNCTION clear
+    SET first operand to empty string
+    SET second operand to empty string
+    SET operator to empty string
+    SET operator symbol to empty string
+    SET result to empty string
+    SET previous operation text content to an empty string
+    SET output text content to an empty string
+ENDFUNCTION
+
 LISTEN for digits container click event
-    CALL display and PASS the target node's text content
+    CALL prepare operation and PASS event target node
 ENDLISTEN
 
 LISTEN for operators container click event
@@ -97,7 +121,9 @@ LISTEN for operators container click event
         CALL operate and PASS two operands, and operator
     ENDIF
     ELSEIF second operand is empty THEN
-        SET operator to target text symbol
+        SET operator id to target id
+        SET operator symbol to target text content
+        CALL display and PASS output node and first operand, operator symbol string
     ENDELSEIF
 ENDLISTEN
 ```
