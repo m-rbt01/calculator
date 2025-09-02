@@ -35,8 +35,7 @@ const operation = {
             case DIVIDE_ID:
                 this.result = divide(this.firstOperand, this.secondOperand);
         }
-        display(previousOperation, activeOutput.textContent);
-        display(activeOutput, this.result);
+        if(!Number.isInteger(this.result)) this.result = this.result.toFixed(1);
     }
 };
 
@@ -61,9 +60,10 @@ function display(displayContainer, output){
     displayContainer.textContent = output;
 }
 
-function setOperation(clickEvent){
+function setOperands(clickEvent){
     let digitText = clickEvent.target.textContent;
     let newOutput;
+    if(operation.result !== '') clear();
     if(operation.id === ''){
         operation.firstOperand += digitText;
         newOutput = operation.firstOperand;
@@ -75,13 +75,24 @@ function setOperation(clickEvent){
     display(activeOutput, newOutput);
 }
 
+function setOperator(operatorId, operatorSymbol){
+    operation.id = operatorId;
+    operation.symbol = operatorSymbol;
+    display(activeOutput, `${operation.firstOperand} ${operation.symbol}`);
+}
+
 function evaluateOperation(clickEvent){
     let operator = clickEvent.target;
-    if(operator.id === EQUALS_ID) operation.operate();
-    else if(operation.secondOperand === ''){
-        operation.id = operator.id;
-        operation.symbol = operator.textContent;
-        display(activeOutput, `${operation.firstOperand} ${operation.symbol}`);
+    if(operation.secondOperand !== ''){ //operate when both operands are present
+        operation.operate();
+        operation.firstOperand = operation.result;
+        operation.secondOperand = '';
+        display(previousOperation, activeOutput.textContent);
+        display(activeOutput, operation.firstOperand);
+    }
+    if(operator.id !== EQUALS_ID){
+        operation.result = '';
+        setOperator(operator.id, operator.textContent);
     }
 }
 
@@ -94,6 +105,6 @@ function clear(){
 }
 
 //Event Listeners
-digitsContainer.addEventListener("click", setOperation);
+digitsContainer.addEventListener("click", setOperands);
 
 operatorsContainer.addEventListener("click", evaluateOperation);
