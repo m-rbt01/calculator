@@ -42,32 +42,62 @@ Create a calculator program that evaluates a single arithmetic operation at a ti
 
 ### ALGORITHM
 ```
-DECLARE global operand 1 variable
-DECLARE global operand 2 variable
+DECLARE global first operand variable
+DECLARE global second operand variable
 DECLARE global operator variable
+SET global previous operation to DOM previous operation div
+SET global output to DOM output div
+SET global digits to DOM digits container
+SET global operators to DOM operators container
 
-FUNCTION add gets PASSED two addends
+FUNCTION add TAKES two addends
     RETURN the sum of both addends
 ENDFUNCTION
 
-FUNCTION subtract gets PASSED a minuend and a subtrahend
+FUNCTION subtract TAKES a minuend and a subtrahend
     RETURN the difference of minuend minus subtrahend
 ENDFUNCTION
 
-FUNCTION multiply gets PASSED a multiplicand and a multiplier
+FUNCTION multiply TAKES a multiplicand and a multiplier
     RETURN the product of multiplying multiplicand by multiplier
 ENDFUNCTION
 
-FUNCTION divide gets PASSED a dividend and a divisor
+FUNCTION divide TAKES a dividend and a divisor
     RETURN the quotient of dividing dividend by divisor
 ENDFUNCTION
 
-FUNCTION operate gets PASSED two operands, and an operator
+FUNCTION operate TAKES two operands, and an operator
     CASE operator OF
-        ADD: call add function with operands, return result
-        SUBTRACT: call subtract function with operands, return result
-        MULTIPLY: call multiply  with operands, return result
-        OTHERS: call divide with operands, return result
+        ADDITION: call add function with operands, return result
+        SUBTRACTION: call subtract function with operands, return result
+        MULTIPLICATION: call multiply  with operands, return result
+        DIVISION: call divide with operands, return result
     ENDCASE
 ENDFUNCTION
+
+FUNCTION display TAKES string output
+    IF operator is empty THEN
+        SET first operand to its current content plus string output
+        SET output's text content to the first operand
+    ENDIF
+    ELSE
+        SET second operand to its current content plus string output
+        SET outputs text content to the first operand, operator, and second operand
+    ENDELSE
+ENDFUNCTION
+
+LISTEN for digits container click event
+    CALL display and PASS the target node's text content
+ENDLISTEN
+
+LISTEN for operators container click event
+    IF event target id is equals THEN
+        CONVERT first operand into a number
+        CONVERT second operand into a number
+        CALL operate and PASS two operands, and operator
+    ENDIF
+    ELSEIF second operand is empty THEN
+        SET operator to target text symbol
+    ENDELSEIF
+ENDLISTEN
 ```
