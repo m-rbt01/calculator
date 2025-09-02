@@ -58,8 +58,9 @@ SET global operation object holding:
             MULTIPLICATION: call multiply  with operands, set to result
             DIVISION: call divide with operands, set to result
         ENDCASE
-        CALL display and PASS previous operation container and output text content
-        CALL display and PASS output container and result
+        IF result IS NOT an integer THEN
+            CALL to fixed method on result and round to 1 decimal point
+        ENDIF
 SET global previous operation to DOM previous operation div
 SET global output to DOM output div
 SET global digits to DOM digits container
@@ -85,7 +86,10 @@ FUNCTION display TAKES display node and string output
     SET display node's text content to the string output
 ENDFUNCTION
 
-FUNCTION set operation TAKES digit click event
+FUNCTION set operands TAKES digit click event
+    IF result IS NOT empty THEN
+        CALL clear function
+    ENDIF
     SET text content to digit node text content
     DECLARE newOutput 
     IF operator id is empty THEN
@@ -99,16 +103,26 @@ FUNCTION set operation TAKES digit click event
     CALL display and PASS output container, and newOutput string
 ENDFUNCTION
 
+FUNCTION set operator TAKES id and symbol
+    SET operator id to id
+    SET operator symbol to symbol
+    CALL display and PASS output container and first operand plus symbol
+ENDFUNCTION
+
 FUNCTION evaluate operation takes operator click event
     SET operator node to event target
-    IF node id is equals button THEN
+    IF second operand IS NOT empty THEN
         CALL operate on operation object
+        SET first operand to result
+        SET second operand to empty string
+        CALL display and PASS previous operation container and output text content
+        CALL display and PASS output container and first operand
+        
     ENDIF
-    ELSEIF second operand is empty THEN
-        SET operator id to node id
-        SET operator symbol to node text content
-        CALL display and PASS output node and output content plus symbol
-    ENDELSEIF
+    IF operator node is IS NOT equals THEN
+        SET result to empty string
+        CALL set operator and PASS node id and text content
+    ENDIF
 ENDFUNCTION
 
 FUNCTION clear
@@ -122,7 +136,7 @@ FUNCTION clear
 ENDFUNCTION
 
 LISTEN for digits container click event
-    CALL set operation and PASS click event
+    CALL set operands and PASS click event
 ENDLISTEN
 
 LISTEN for operators container click event
