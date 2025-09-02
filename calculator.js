@@ -1,8 +1,8 @@
 //Global DOM References
 const previousOperation = document.querySelector("#previous-operation");
-const output = document.querySelector("#active-output");
-const digits = document.querySelector(".digits");
-const operators = document.querySelector(".operators");
+const activeOutput = document.querySelector("#active-output");
+const digitsContainer = document.querySelector(".digits");
+const operatorsContainer = document.querySelector(".operators");
 
 //Global Constants
 const EQUALS_ID = "equals";
@@ -10,13 +10,35 @@ const ADD_ID = "addition";
 const SUBTRACT_ID = "subtraction";
 const MULTIPLY_ID = "multiplication";
 const DIVIDE_ID = "division";
+const OPERATE_KEY = "operate";
 
 //Global Variables
-let firstOperand = '';
-let secondOperand = '';
-let operatorId = '';
-let operatorSymbol = '';
-let result = '';
+const operation = {
+    firstOperand: '',
+    secondOperand: '',
+    id: '',
+    symbol: '',
+    result: '',
+    operate(){
+        this.firstOperand = +this.firstOperand;
+        this.secondOperand = +this.secondOperand;
+        switch(this.id){
+            case ADD_ID:
+                this.result = add(this.firstOperand, this.secondOperand);
+                break;
+            case SUBTRACT_ID:
+                this.result = subtract(this.firstOperand, this.secondOperand);
+                break;
+            case MULTIPLY_ID:
+                this.result = multiply(this.firstOperand, this.secondOperand);
+                break;
+            case DIVIDE_ID:
+                this.result = divide(this.firstOperand, this.secondOperand);
+        }
+        display(previousOperation, activeOutput.textContent);
+        display(activeOutput, this.result);
+    }
+};
 
 //Functions
 function add(firstAddend, secondAddend){
@@ -35,61 +57,43 @@ function divide(dividend, divisor){
     return dividend / divisor;
 }
 
-function operate(firstNum, operation, secondNum){
-    switch(operation){
-        case ADD_ID:
-            result = add(firstNum, secondNum);
-            break;
-        case SUBTRACT_ID:
-            result = subtract(firstNum, secondNum);
-            break;
-        case MULTIPLY_ID:
-            result = multiply(firstNum, secondNum);
-            break;
-        case DIVIDE_ID:
-            result = divide(firstNum, secondNum);
-    }
-    display(result);
+function display(displayContainer, output){
+    displayContainer.textContent = output;
 }
 
-function display(newText){
-    if(operatorId === ''){
-        firstOperand += newText;
-        output.textContent = firstOperand;
-    }
-    else if(result === ''){
-        secondOperand += newText;
-        output.textContent = `${firstOperand} ${operatorSymbol} ${secondOperand}`;
+function setOperation(clickEvent){
+    let digitText = clickEvent.target.textContent;
+    let newOutput;
+    if(operation.id === ''){
+        operation.firstOperand += digitText;
+        newOutput = operation.firstOperand;
     }
     else{
-        previousOperation.textContent = output.textContent;
-        output.textContent = newText;
+        operation.secondOperand += digitText;
+        newOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
+    }
+    display(activeOutput, newOutput);
+}
+
+function evaluateOperation(clickEvent){
+    let operator = clickEvent.target;
+    if(operator.id === EQUALS_ID) operation.operate();
+    else if(operation.secondOperand === ''){
+        operation.id = operator.id;
+        operation.symbol = operator.textContent;
+        display(activeOutput, `${operation.firstOperand} ${operation.symbol}`);
     }
 }
 
 function clear(){
-    firstOperand = '';
-    secondOperand = '';
-    operatorId = '';
-    operatorSymbol = '';
-    result = '';
+    for(let key in operation){
+        if(key !== OPERATE_KEY) operation[key] = '';
+    }
     previousOperation.textContent = '';
-    output.textContent = '';
+    activeOutput.textContent = '';
 }
 
 //Event Listeners
-digits.addEventListener("click", (event) => {
-    display(event.target.textContent);
-});
+digitsContainer.addEventListener("click", setOperation);
 
-operators.addEventListener("click", (event) => {
-    if(event.target.id === EQUALS_ID){
-        firstOperand = +firstOperand;
-        secondOperand = +secondOperand;
-        operate(firstOperand, operatorId, secondOperand);
-    }
-    else if(secondOperand === ''){
-        operatorId = event.target.id;
-        operatorSymbol = event.target.textContent;
-    }
-});
+operatorsContainer.addEventListener("click", evaluateOperation);
