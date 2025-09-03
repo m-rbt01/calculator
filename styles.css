@@ -111,7 +111,7 @@ body{
 }
 
 /*---edit children---*/
-#clear-input{
+#clear-calculator{
     flex: 1 0 0;
     background-color: rgb(93, 112, 93);
 }
