@@ -2,9 +2,11 @@
 const previousOperation = document.querySelector("#previous-operation");
 const activeOutput = document.querySelector("#active-output");
 const digitsContainer = document.querySelector(".digits");
+const editContainer = document.querySelector(".edit");
 const operatorsContainer = document.querySelector(".operators");
 
 //Global Constants
+const CLEAR_ID = "clear-calculator";
 const EQUALS_ID = "equals";
 const ADD_ID = "addition";
 const SUBTRACT_ID = "subtraction";
@@ -63,12 +65,12 @@ function display(displayContainer, output){
 function setOperands(clickEvent){
     let digitText = clickEvent.target.textContent;
     let newOutput;
-    if(operation.result !== '') clear();
-    if(operation.id === ''){
+    if(operation.result !== '') clear(); //only reset calculator after a completed operation
+    if(operation.id === ''){ //concatenate first operand if no operator is present
         operation.firstOperand += digitText;
         newOutput = operation.firstOperand;
     }
-    else{
+    else{ //otherwise, concatenate the second operand
         operation.secondOperand += digitText;
         newOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
     }
@@ -90,7 +92,7 @@ function evaluateOperation(clickEvent){
         display(previousOperation, activeOutput.textContent);
         display(activeOutput, operation.firstOperand);
     }
-    if(operator.id !== EQUALS_ID){
+    if((operation.firstOperand !== '') && (operator.id !== EQUALS_ID)){
         operation.result = '';
         setOperator(operator.id, operator.textContent);
     }
@@ -104,7 +106,12 @@ function clear(){
     activeOutput.textContent = '';
 }
 
+function edit(clickEvent){
+    let editId = clickEvent.target.id;
+    if(editId === CLEAR_ID) clear();
+}
+
 //Event Listeners
 digitsContainer.addEventListener("click", setOperands);
-
 operatorsContainer.addEventListener("click", evaluateOperation);
+editContainer.addEventListener("click", edit);
