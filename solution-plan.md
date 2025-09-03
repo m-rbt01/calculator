@@ -65,6 +65,7 @@ SET global previous operation to DOM previous operation div
 SET global output to DOM output div
 SET global digits to DOM digits container
 SET global operators to DOM operators container
+SET global edit to DOM edit container
 
 FUNCTION add TAKES two addends
     RETURN the sum of both addends
@@ -109,7 +110,7 @@ FUNCTION set operator TAKES id and symbol
     CALL display and PASS output container and first operand plus symbol
 ENDFUNCTION
 
-FUNCTION evaluate operation takes operator click event
+FUNCTION evaluate operation TAKES operator click event
     SET operator node to event target
     IF second operand IS NOT empty THEN
         CALL operate on operation object
@@ -135,11 +136,22 @@ FUNCTION clear
     SET output text content to an empty string
 ENDFUNCTION
 
+FUNCTION edit TAKES edit container click event
+    SET id to edit target id
+    IF id IS clear THEN
+        CALL clear function
+    ENDIF
+ENDFUNCTION
+
 LISTEN for digits container click event
     CALL set operands and PASS click event
 ENDLISTEN
 
 LISTEN for operators container click event
     CALL evaluate operation and PASS click event
+ENDLISTEN
+
+LISTEN for edit container click event
+    CALL edit function and PASS click event
 ENDLISTEN
 ```
