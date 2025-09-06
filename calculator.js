@@ -41,7 +41,7 @@ const operation = {
     }
 };
 
-//Functions
+//Calculator Functions
 function add(firstAddend, secondAddend){
     return firstAddend + secondAddend;
 }
@@ -60,21 +60,24 @@ function divide(dividend, divisor){
 
 function display(displayContainer, output){
     displayContainer.textContent = output;
+    //scroll display to right
+    const RIGHT_OFFSET = displayContainer.scrollWidth - displayContainer.clientWidth;
+    displayContainer.scrollLeft = RIGHT_OFFSET;
 }
 
 function setOperands(clickEvent){
     let digitText = clickEvent.target.textContent;
-    let newOutput;
+    let operandOutput;
     if(operation.result !== '') clear(); //only reset calculator after a completed operation
     if(operation.id === ''){ //concatenate first operand if no operator is present
         operation.firstOperand += digitText;
-        newOutput = operation.firstOperand;
+        operandOutput = operation.firstOperand;
     }
     else{ //otherwise, concatenate the second operand
         operation.secondOperand += digitText;
-        newOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
+        operandOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
     }
-    display(activeOutput, newOutput);
+    display(activeOutput, operandOutput);
 }
 
 function setOperator(operatorId, operatorSymbol){
