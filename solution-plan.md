@@ -58,7 +58,7 @@ SET global operation object holding:
             MULTIPLICATION: call multiply  with operands, set to result
             DIVISION: call divide with operands, set to result
         ENDCASE
-        IF result IS NOT an integer and IS NOT infinity THEN
+        IF result IS NOT an integer and IS finite THEN
             CALL to round to max
         ENDIF
         SET first operand to result
@@ -129,7 +129,7 @@ FUNCTION evaluate operation TAKES operator click event
         CALL display and PASS output container and first operand
         
     ENDIF
-    IF first operand IS NOT empty AND IS NOT infinity AND operator node is IS NOT equals THEN
+    IF first operand IS finite AND operator node is IS NOT equals THEN
         SET result to empty string
         CALL set operator and PASS node id and text content
     ENDIF
