@@ -58,14 +58,23 @@ SET global operation object holding:
             MULTIPLICATION: call multiply  with operands, set to result
             DIVISION: call divide with operands, set to result
         ENDCASE
-        IF result IS NOT an integer THEN
-            CALL to fixed method on result and round to 1 decimal point
+        IF result IS NOT an integer and IS NOT error message THEN
+            CALL to round to max
         ENDIF
+        SET first operand to result
+        SET second operand to empty string
 SET global previous operation to DOM previous operation div
 SET global output to DOM output div
 SET global digits to DOM digits container
 SET global operators to DOM operators container
 SET global edit to DOM edit container
+
+FUNCTION round to Max
+    SET array to operation result to string, split by the decimal point
+    IF the fractional portion of the result IS GREATER THAN the max limit THEN
+        CALL to fixed on the result with max limit decimal points
+    ENDIF
+ENDFUNCTION
 
 FUNCTION add TAKES two addends
     RETURN the sum of both addends
@@ -80,6 +89,9 @@ FUNCTION multiply TAKES a multiplicand and a multiplier
 ENDFUNCTION
 
 FUNCTION divide TAKES a dividend and a divisor
+    IF divisor IS zero THEN
+        RETURN error message
+    ENDIF
     RETURN the quotient of dividing dividend by divisor
 ENDFUNCTION
 
@@ -90,7 +102,7 @@ FUNCTION display TAKES display node and string output
 ENDFUNCTION
 
 FUNCTION set operands TAKES digit click event
-    IF result IS NOT empty THEN
+    IF result IS NOT empty OR IS error message THEN
         CALL clear function
     ENDIF
     SET text content to digit node text content
@@ -116,13 +128,11 @@ FUNCTION evaluate operation TAKES operator click event
     SET operator node to event target
     IF second operand IS NOT empty THEN
         CALL operate on operation object
-        SET first operand to result
-        SET second operand to empty string
         CALL display and PASS previous operation container and output text content
         CALL display and PASS output container and first operand
         
     ENDIF
-    IF operator node is IS NOT equals THEN
+    IF first operand IS NOT empty AND IS NOT error message AND operator node is IS NOT equals THEN
         SET result to empty string
         CALL set operator and PASS node id and text content
     ENDIF
