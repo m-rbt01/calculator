@@ -38,7 +38,7 @@ const operation = {
             case DIVIDE_ID:
                 this.result = divide(this.firstOperand, this.secondOperand);
         }
-        if(!Number.isInteger(this.result)) roundToMax(); //round if floating-point result
+        if((this.result !== Infinity) && (!Number.isInteger(this.result))) roundToMax(); //round only if floating-point result
         //reset operands
         this.firstOperand = this.result;
         this.secondOperand = '';
@@ -77,7 +77,8 @@ function display(displayContainer, output){
 function setOperands(clickEvent){
     let digitText = clickEvent.target.textContent;
     let operandOutput;
-    if(operation.result !== '') clear(); //only reset calculator after a completed operation
+    //reset calculator after a completed operation or divide by zero attempt
+    if(operation.result !== '') clear(); 
     if(operation.id === ''){ //concatenate first operand if no operator is present
         operation.firstOperand += digitText;
         operandOutput = operation.firstOperand;
@@ -102,7 +103,8 @@ function evaluateOperation(clickEvent){
         display(previousOperation, activeOutput.textContent);
         display(activeOutput, operation.firstOperand);
     }
-    if((operation.firstOperand !== '') && (operator.id !== EQUALS_ID)){
+    //set new operator only when not equals, and first operand is valid
+    if((operator.id !== EQUALS_ID) && (operation.firstOperand !== '' && operation.firstOperand !== Infinity)){
         operation.result = '';
         setOperator(operator.id, operator.textContent);
     }
