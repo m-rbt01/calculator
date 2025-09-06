@@ -13,6 +13,7 @@ const SUBTRACT_ID = "subtraction";
 const MULTIPLY_ID = "multiplication";
 const DIVIDE_ID = "division";
 const OPERATE_KEY = "operate";
+const MAX_DECIMALS = 5;
 
 //Global Variables
 const operation = {
@@ -37,7 +38,10 @@ const operation = {
             case DIVIDE_ID:
                 this.result = divide(this.firstOperand, this.secondOperand);
         }
-        if(!Number.isInteger(this.result)) this.result = this.result.toFixed(1);
+        if(!Number.isInteger(this.result)) roundToMax(); //round if floating-point result
+        //reset operands
+        this.firstOperand = this.result;
+        this.secondOperand = '';
     }
 };
 
@@ -56,6 +60,11 @@ function multiply(multiplicand, multiplier){
 
 function divide(dividend, divisor){
     return dividend / divisor;
+}
+
+function roundToMax(){
+    const resultArr = operation.result.toString().split('.');
+    if(resultArr[1].length > MAX_DECIMALS) operation.result = operation.result.toFixed(MAX_DECIMALS);
 }
 
 function display(displayContainer, output){
@@ -90,8 +99,6 @@ function evaluateOperation(clickEvent){
     let operator = clickEvent.target;
     if(operation.secondOperand !== ''){ //operate when both operands are present
         operation.operate();
-        operation.firstOperand = operation.result;
-        operation.secondOperand = '';
         display(previousOperation, activeOutput.textContent);
         display(activeOutput, operation.firstOperand);
     }
