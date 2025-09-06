@@ -85,6 +85,8 @@ ENDFUNCTION
 
 FUNCTION display TAKES display node and string output
     SET display node's text content to the string output
+    SET right offset to display node's scroll width minus its visible width
+    SET display node's scroll left position to the right offset
 ENDFUNCTION
 
 FUNCTION set operands TAKES digit click event
