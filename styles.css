@@ -48,7 +48,7 @@ body{
 
 /*---display children---*/
 #previous-operation{
-    opacity: 0.75;
+    opacity: 0.6;
 }
 
 #active-output{
@@ -61,7 +61,6 @@ body{
     white-space: nowrap;
     scrollbar-width: thin;
     scrollbar-color: rgba(58, 58, 58, 0.2) rgba(58, 58, 58, 0.2);
-    border: 2px solid blue;
     text-align: right;
 }
 
