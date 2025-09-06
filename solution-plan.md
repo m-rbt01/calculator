@@ -58,7 +58,7 @@ SET global operation object holding:
             MULTIPLICATION: call multiply  with operands, set to result
             DIVISION: call divide with operands, set to result
         ENDCASE
-        IF result IS NOT an integer and IS NOT error message THEN
+        IF result IS NOT an integer and IS NOT infinity THEN
             CALL to round to max
         ENDIF
         SET first operand to result
@@ -89,9 +89,6 @@ FUNCTION multiply TAKES a multiplicand and a multiplier
 ENDFUNCTION
 
 FUNCTION divide TAKES a dividend and a divisor
-    IF divisor IS zero THEN
-        RETURN error message
-    ENDIF
     RETURN the quotient of dividing dividend by divisor
 ENDFUNCTION
 
@@ -102,7 +99,7 @@ FUNCTION display TAKES display node and string output
 ENDFUNCTION
 
 FUNCTION set operands TAKES digit click event
-    IF result IS NOT empty OR IS error message THEN
+    IF result IS NOT empty THEN
         CALL clear function
     ENDIF
     SET text content to digit node text content
@@ -132,7 +129,7 @@ FUNCTION evaluate operation TAKES operator click event
         CALL display and PASS output container and first operand
         
     ENDIF
-    IF first operand IS NOT empty AND IS NOT error message AND operator node is IS NOT equals THEN
+    IF first operand IS NOT empty AND IS NOT infinity AND operator node is IS NOT equals THEN
         SET result to empty string
         CALL set operator and PASS node id and text content
     ENDIF
