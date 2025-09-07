@@ -13,9 +13,9 @@ const ADD_ID = "addition";
 const SUBTRACT_ID = "subtraction";
 const MULTIPLY_ID = "multiplication";
 const DIVIDE_ID = "division";
-const POS_NEG_ID = "positive-negative";
-const OPERATE_KEY = "operate";
+const NEGATE_ID = "negate";
 const MAX_DECIMALS = 5;
+const OPERATE_KEY = "operate";
 const FIRST_OP_KEY = "firstOperand";
 const SECOND_OP_KEY = "secondOperand"; 
 const NEGATIVE_SIGN = '-';
@@ -95,11 +95,11 @@ function setOperands(clickButton){
     //reset calculator after a completed operation or divide by zero attempt
     if(operation.result !== '') clear(); 
     if(operation.id === ''){ //concatenate first operand if no operator is present
-        (clickButton.id !== POS_NEG_ID) ? (operation.firstOperand += digitText) : negateOperand(FIRST_OP_KEY);
+        (clickButton.id !== NEGATE_ID) ? (operation.firstOperand += digitText) : negateOperand(FIRST_OP_KEY);
         operandOutput = operation.firstOperand;
     }
     else{ //otherwise, concatenate the second operand
-        (clickButton.id !== POS_NEG_ID) ? (operation.secondOperand += digitText) : negateOperand(SECOND_OP_KEY);
+        (clickButton.id !== NEGATE_ID) ? (operation.secondOperand += digitText) : negateOperand(SECOND_OP_KEY);
         operandOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
     }
     display(activeOutput, operandOutput);
