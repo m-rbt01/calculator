@@ -68,6 +68,7 @@ SET global output to DOM output div
 SET global digits to DOM digits container
 SET global operators to DOM operators container
 SET global edit to DOM edit container
+SET global decimal button node to DOM button
 
 FUNCTION round to Max
     SET array to operation result to string, split by the decimal point
@@ -116,6 +117,7 @@ FUNCTION set operands TAKES digit click event
 ENDFUNCTION
 
 FUNCTION set operator TAKES id and symbol
+    SET decimal button disabled to false
     SET operator id to id
     SET operator symbol to symbol
     CALL display and PASS output container and first operand plus symbol
@@ -125,6 +127,7 @@ FUNCTION evaluate operation TAKES operator click event
     SET operator node to event target
     IF second operand IS NOT empty THEN
         CALL operate on operation object
+        SET decimal button disabled to false
         CALL display and PASS previous operation container and output text content
         CALL display and PASS output container and first operand
         
@@ -153,6 +156,9 @@ FUNCTION edit TAKES edit container click event
 ENDFUNCTION
 
 LISTEN for digits container click event
+    IF the digit node IS decimal THEN
+        SET decimal button disabled to true
+    ENDIF
     CALL set operands and PASS click event
 ENDLISTEN
 
