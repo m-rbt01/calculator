@@ -106,7 +106,6 @@ FUNCTION negate Operand TAKES operand name
     ELSE
         SET operand to negative sign plus itself
     ENDELSE
-    RETURN an empty string
 ENDFUNCTION
 
 FUNCTION set operands TAKES digit click event
