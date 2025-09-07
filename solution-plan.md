@@ -99,6 +99,16 @@ FUNCTION display TAKES display node and string output
     SET display node's scroll left position to the right offset
 ENDFUNCTION
 
+FUNCTION negate Operand TAKES operand name
+    IF operand first character is negative sign THEN
+        SET operand to a substring of itself except the negative sign
+    ENDIF
+    ELSE
+        SET operand to negative sign plus itself
+    ENDELSE
+    RETURN an empty string
+ENDFUNCTION
+
 FUNCTION set operands TAKES digit click event
     IF result IS NOT empty THEN
         CALL clear function
@@ -106,11 +116,11 @@ FUNCTION set operands TAKES digit click event
     SET text content to digit node text content
     DECLARE newOutput 
     IF operator id is empty THEN
-        SET first operand to its current content plus text content
+        SET first operand to its current content plus text content IF NOT +- OR call negate operand function
         SET newOutput to first operand
     ENDIF
     ELSE
-        SET second operand to its current content plus text content
+        SET second operand to its current content plus text content IF NOT +- OR call negate operand function
         SET newOutput to first operand, operator symbol, and second operand
     ENDELSE
     CALL display and PASS output container, and newOutput string
