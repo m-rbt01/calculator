@@ -23,7 +23,7 @@ body{
 .calculator{
     width: 400px;
     height: 600px;
-    padding: 16px;
+    padding: 20px;
     border-radius: 5px;
     background-color: rgb(27, 27, 27);
     display: flex;
@@ -69,7 +69,7 @@ body{
     flex: 3 0 0;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
 }
 
 .operators{
@@ -100,7 +100,7 @@ body{
 }
 
 .digits, .operators, .row{
-    gap: 2px;
+    gap: 4px;
 }
 
 .digits button{
