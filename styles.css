@@ -88,6 +88,7 @@ body{
 .edit{
     flex: 1 0 0;
     display: flex;
+    gap: 4px;
 }
 
 /*---digits and operators children---*/
@@ -112,8 +113,15 @@ body{
 }
 
 /*---edit children---*/
-#clear-calculator{
+#clear{
+    flex: 2.1 0 0;
+}
+
+#backspace{
     flex: 1 0 0;
+}
+
+#clear, #backspace{
     background-color: rgb(93, 112, 93);
 }
 
