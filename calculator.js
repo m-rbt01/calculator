@@ -7,7 +7,7 @@ const operatorsContainer = document.querySelector(".operators");
 const decimalButton = document.querySelector("#decimal");
 
 //Global Constants
-const CLEAR_ID = "clear-calculator";
+const CLEAR_ID = "clear";
 const EQUALS_ID = "equals";
 const ADD_ID = "addition";
 const SUBTRACT_ID = "subtraction";
