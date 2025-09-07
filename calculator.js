@@ -4,6 +4,7 @@ const activeOutput = document.querySelector("#active-output");
 const digitsContainer = document.querySelector(".digits");
 const editContainer = document.querySelector(".edit");
 const operatorsContainer = document.querySelector(".operators");
+const decimalButton = document.querySelector("#decimal");
 
 //Global Constants
 const CLEAR_ID = "clear-calculator";
@@ -12,6 +13,8 @@ const ADD_ID = "addition";
 const SUBTRACT_ID = "subtraction";
 const MULTIPLY_ID = "multiplication";
 const DIVIDE_ID = "division";
+const DECIMAL_ID = "decimal";
+const POS_NEG_ID = "positive-negative";
 const OPERATE_KEY = "operate";
 const MAX_DECIMALS = 5;
 
@@ -74,8 +77,7 @@ function display(displayContainer, output){
     displayContainer.scrollLeft = RIGHT_OFFSET;
 }
 
-function setOperands(clickEvent){
-    let digitText = clickEvent.target.textContent;
+function setOperands(digitText){
     let operandOutput;
     //reset calculator after a completed operation or divide by zero attempt
     if(operation.result !== '') clear(); 
@@ -91,6 +93,7 @@ function setOperands(clickEvent){
 }
 
 function setOperator(operatorId, operatorSymbol){
+    decimalButton.disabled = false;
     operation.id = operatorId;
     operation.symbol = operatorSymbol;
     display(activeOutput, `${operation.firstOperand} ${operation.symbol}`);
@@ -100,6 +103,7 @@ function evaluateOperation(clickEvent){
     let operator = clickEvent.target;
     if(operation.secondOperand !== ''){ //operate when both operands are present
         operation.operate();
+        decimalButton.disabled = false;
         display(previousOperation, activeOutput.textContent);
         display(activeOutput, operation.firstOperand);
     }
@@ -124,6 +128,9 @@ function edit(clickEvent){
 }
 
 //Event Listeners
-digitsContainer.addEventListener("click", setOperands);
+digitsContainer.addEventListener("click", (event) => {
+    if(event.target === decimalButton) decimalButton.disabled = true;
+    setOperands(event.target.textContent);
+});
 operatorsContainer.addEventListener("click", evaluateOperation);
 editContainer.addEventListener("click", edit);
