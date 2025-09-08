@@ -192,6 +192,9 @@ FUNCTION edit TAKES edit container click event
 ENDFUNCTION
 
 LISTEN for digits container click event
+    IF event target is NOT a button THEN
+        RETURN out of function
+    ENDIF
     IF the digit node IS decimal THEN
         SET decimal button disabled to true
     ENDIF
@@ -199,10 +202,16 @@ LISTEN for digits container click event
 ENDLISTEN
 
 LISTEN for operators container click event
+    IF event target is NOT a button THEN 
+        RETURN out of function
+    ENDIF
     CALL evaluate operation and PASS click event
 ENDLISTEN
 
 LISTEN for edit container click event
+    IF event target is NOT a button THEN
+        RETURN out of function
+    ENDIF
     IF active output IS NOT an empty string THEN 
         CALL edit function and PASS click event
     ENDIf
