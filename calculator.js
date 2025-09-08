@@ -114,8 +114,7 @@ function setOperator(operatorId, operatorSymbol){
     display(activeOutput, `${operation.firstOperand} ${operation.symbol}`);
 }
 
-function evaluateOperation(clickEvent){
-    let operator = clickEvent.target;
+function evaluateOperation(operator){
     if(operation.secondOperand.length > 0){ //operate when both operands are present
         operation.operate();
         decimalButton.disabled = false;
@@ -166,10 +165,15 @@ function edit(editButton){
 
 //Event Listeners
 digitsContainer.addEventListener("click", (event) => {
+    if(!(event.target instanceof HTMLButtonElement)) return;
     if(event.target === decimalButton) decimalButton.disabled = true;
     setOperands(event.target);
 });
-operatorsContainer.addEventListener("click", evaluateOperation);
+operatorsContainer.addEventListener("click", (event) => {
+    if(!(event.target instanceof HTMLButtonElement)) return;
+    evaluateOperation(event.target);
+});
 editContainer.addEventListener("click", (event) => {
+    if(!(event.target instanceof HTMLButtonElement)) return;
     if(activeOutput.textContent !== '') edit(event.target);
 });
