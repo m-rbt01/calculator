@@ -13,6 +13,9 @@ Create a calculator program that evaluates a single arithmetic operation at a ti
 * If dividing by zero is attempted, a message is displayed to avoid the operation.
 * If operators are pressed consecutively, only the most recent operator should be used for the operation.
 * After a result is displayed, pressing any digit should clear the display and start a new operation.
+* The decimal button should not work after being used on a given operand
+* The backspace button should remove one character at a time from the operation
+* The user should be able to use their keyboard for inserting numbers, operators
 
 ### PLAN
 **UI**  
@@ -157,11 +160,35 @@ FUNCTION clear
     SET output text content to an empty string
 ENDFUNCTION
 
+FUNCTION backspace
+    DECLARE new output
+    IF second operator length IS GREATER THAN zero THEN
+        SET array to second operator split to array
+        CALL pop on array
+        SET second operator to array joined to string
+        SET new output to first, symbol, and second operator string
+    ELSEIF operator id IS NOT empty string
+        SET operator id to empty string
+        SET operator symbol to empty string
+        SET new output to first operand
+    ENDELSEIF
+    ELSEIF first operand length IS  GREATER THAN zero THEN
+        SET array to first operand split to array
+        CALL pop on array
+        SET first operand to array joined to string
+        SET new output to first operand
+    ENDELSEIF
+    CALL display with active output, and new output
+ENDFUNCTION
+
 FUNCTION edit TAKES edit container click event
     SET id to edit target id
     IF id IS clear THEN
         CALL clear function
     ENDIF
+    ELSEIF id IS backspace THEN
+        CALL backspace function
+    ENDELSEIF
 ENDFUNCTION
 
 LISTEN for digits container click event
@@ -176,6 +203,8 @@ LISTEN for operators container click event
 ENDLISTEN
 
 LISTEN for edit container click event
-    CALL edit function and PASS click event
+    IF active output IS NOT an empty string THEN 
+        CALL edit function and PASS click event
+    ENDIf
 ENDLISTEN
 ```
