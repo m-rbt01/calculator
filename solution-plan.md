@@ -71,9 +71,9 @@ SET global edit to DOM edit container
 SET global decimal button node to DOM button
 
 FUNCTION round to Max
-    SET array to operation result to string, split by the decimal point
+    SET fractional part to operation result, to string, split by the decimal point
     IF the fractional portion of the result IS GREATER THAN the max limit THEN
-        CALL to fixed on the result with max limit decimal points
+        CALL to fixed on the result with max limit decimal points, and parse to float
     ENDIF
 ENDFUNCTION
 
@@ -103,7 +103,7 @@ FUNCTION negate Operand TAKES operand name
     IF operand first character is negative sign THEN
         SET operand to a substring of itself except the negative sign
     ENDIF
-    ELSE
+    ELSEIF operand length IS GREATER THAN zero THEN
         SET operand to negative sign plus itself
     ENDELSE
 ENDFUNCTION
