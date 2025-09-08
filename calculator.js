@@ -7,14 +7,14 @@ const operatorsContainer = document.querySelector(".operators");
 const decimalButton = document.querySelector("#decimal");
 
 //Global Constants
-const CLEAR_ID = "clear";
-const EQUALS_ID = "equals";
 const ADD_ID = "addition";
 const SUBTRACT_ID = "subtraction";
 const MULTIPLY_ID = "multiplication";
 const DIVIDE_ID = "division";
+const EQUALS_ID = "equals";
 const NEGATE_ID = "negate";
-const MAX_DECIMALS = 5;
+const CLEAR_ID = "clear";
+const MAX_DEC_POINTS = 5;
 const OPERATE_KEY = "operate";
 const FIRST_OP_KEY = "firstOperand";
 const SECOND_OP_KEY = "secondOperand"; 
@@ -45,7 +45,7 @@ const operation = {
         }
         if((isFinite(this.result)) && (!Number.isInteger(this.result))) roundToMax(); //round only if floating-point result
         //reset operands
-        this.firstOperand = this.result;
+        this.firstOperand = this.result.toString();
         this.secondOperand = '';
     }
 };
@@ -68,8 +68,8 @@ function divide(dividend, divisor){
 }
 
 function roundToMax(){
-    const resultArr = operation.result.toString().split('.');
-    if(resultArr[1].length > MAX_DECIMALS) operation.result = operation.result.toFixed(MAX_DECIMALS);
+    const fractionalPart = operation.result.toString().split('.')[1];
+    if(fractionalPart.length > MAX_DEC_POINTS) operation.result = parseFloat(operation.result.toFixed(MAX_DEC_POINTS));
 }
 
 function display(displayContainer, output){
@@ -80,11 +80,10 @@ function display(displayContainer, output){
 }
 
 function negateOperand(operandKey){
-    let operand = operation[operandKey];
-    if(operand[0] === NEGATIVE_SIGN){
+    if(operation[operandKey][0] === NEGATIVE_SIGN){
         operation[operandKey] = operation[operandKey].substring(1);
     }
-    else{
+    else if(operation[operandKey].length > 0){
         operation[operandKey] = NEGATIVE_SIGN + operation[operandKey];
     }
 }
@@ -95,11 +94,11 @@ function setOperands(clickButton){
     //reset calculator after a completed operation or divide by zero attempt
     if(operation.result !== '') clear(); 
     if(operation.id === ''){ //concatenate first operand if no operator is present
-        (clickButton.id !== NEGATE_ID) ? (operation.firstOperand += digitText) : negateOperand(FIRST_OP_KEY);
+        (clickButton.id === NEGATE_ID) ? negateOperand(FIRST_OP_KEY) : operation.firstOperand += digitText;
         operandOutput = operation.firstOperand;
     }
     else{ //otherwise, concatenate the second operand
-        (clickButton.id !== NEGATE_ID) ? (operation.secondOperand += digitText) : negateOperand(SECOND_OP_KEY);
+        (clickButton.id === NEGATE_ID) ? negateOperand(SECOND_OP_KEY) : operation.secondOperand += digitText;
         operandOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
     }
     display(activeOutput, operandOutput);
@@ -114,14 +113,14 @@ function setOperator(operatorId, operatorSymbol){
 
 function evaluateOperation(clickEvent){
     let operator = clickEvent.target;
-    if(operation.secondOperand !== ''){ //operate when both operands are present
+    if(operation.secondOperand.length > 0){ //operate when both operands are present
         operation.operate();
         decimalButton.disabled = false;
         display(previousOperation, activeOutput.textContent);
         display(activeOutput, operation.firstOperand);
     }
     //set new operator only when not equals, and first operand is valid
-    if((operator.id !== EQUALS_ID) && (operation.firstOperand !== '' && isFinite(operation.firstOperand))){
+    if((operator.id !== EQUALS_ID) && (operation.firstOperand.length > 0)){
         operation.result = '';
         setOperator(operator.id, operator.textContent);
     }
