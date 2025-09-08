@@ -43,7 +43,7 @@ body{
 .calculator-buttons{
     flex: 4 0 0;
     display: flex;
-    gap: 4px;
+    gap: 8px;
 }
 
 /*---display children---*/
@@ -69,7 +69,7 @@ body{
     flex: 3 0 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
 }
 
 .operators{
@@ -80,7 +80,7 @@ body{
 
 /*---input children---*/
 .digits{
-    flex: 4.1 0 0;
+    flex: 4.3 0 0;
     display: flex;
     flex-direction: column;
 }
@@ -88,7 +88,7 @@ body{
 .edit{
     flex: 1 0 0;
     display: flex;
-    gap: 4px;
+    gap: 8px;
 }
 
 /*---digits and operators children---*/
@@ -101,7 +101,7 @@ body{
 }
 
 .digits, .operators, .row{
-    gap: 4px;
+    gap: 8px;
 }
 
 .digits button{
@@ -132,4 +132,5 @@ button{
     cursor: pointer;
     font-weight: 700;
     border-radius: 5px;
+    border: none;
 }
