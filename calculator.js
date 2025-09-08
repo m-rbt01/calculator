@@ -14,6 +14,7 @@ const DIVIDE_ID = "division";
 const EQUALS_ID = "equals";
 const NEGATE_ID = "negate";
 const CLEAR_ID = "clear";
+const BACKSPACE_ID = "backspace";
 const MAX_DEC_POINTS = 5;
 const OPERATE_KEY = "operate";
 const FIRST_OP_KEY = "firstOperand";
@@ -47,6 +48,8 @@ const operation = {
         //reset operands
         this.firstOperand = this.result.toString();
         this.secondOperand = '';
+        this.id = '';
+        this.symbol = '';
     }
 };
 
@@ -134,9 +137,31 @@ function clear(){
     activeOutput.textContent = '';
 }
 
-function edit(clickEvent){
-    let editId = clickEvent.target.id;
-    if(editId === CLEAR_ID) clear();
+function backspace(){
+    let newOutput;
+    if(operation.secondOperand.length > 0){
+        let secondArray = operation.secondOperand.split('');
+        secondArray.pop();
+        operation.secondOperand = secondArray.join('');
+        newOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
+    }
+    else if(operation.id !== ''){
+        operation.id = '';
+        operation.symbol = '';
+        newOutput = operation.firstOperand;
+    }
+    else{
+        let firstArray = operation.firstOperand.split('');
+        firstArray.pop();
+        operation.firstOperand = firstArray.join('');
+        newOutput = operation.firstOperand;
+    }
+    display(activeOutput, newOutput);
+}
+
+function edit(editButton){
+    let editId = editButton.id;
+    (editId === CLEAR_ID) ? clear() : backspace();
 }
 
 //Event Listeners
@@ -145,4 +170,6 @@ digitsContainer.addEventListener("click", (event) => {
     setOperands(event.target);
 });
 operatorsContainer.addEventListener("click", evaluateOperation);
-editContainer.addEventListener("click", edit);
+editContainer.addEventListener("click", (event) => {
+    if(activeOutput.textContent !== '') edit(event.target);
+});
