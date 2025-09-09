@@ -149,6 +149,7 @@ function backspace(){
     else if(operation.id !== ''){
         operation.id = '';
         operation.symbol = '';
+        if(operation.firstOperand.includes(DECIMAL_SIGN)) decimalButton.disabled = true;
         newOutput = operation.firstOperand;
     }
     else{
