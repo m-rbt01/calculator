@@ -49,13 +49,12 @@ Create a calculator program that evaluates a single arithmetic operation at a ti
 SET global operation object holding:
     first operand variable
     second operand variable
-    operator id variable
     operator symbol variable
     result variable
     operate function:
         CONVERT first operand into a number
         CONVERT second operand into a number
-        CASE operator id OF
+        CASE operator symbol OF
             ADDITION: call add function with operands, set to result
             SUBTRACTION: call subtract function with operands, set to result
             MULTIPLICATION: call multiply  with operands, set to result
@@ -66,6 +65,7 @@ SET global operation object holding:
         ENDIF
         SET first operand to result
         SET second operand to empty string
+        SET symbol to empty string
 SET global previous operation to DOM previous operation div
 SET global output to DOM output div
 SET global digits to DOM digits container
@@ -111,32 +111,29 @@ FUNCTION negate Operand TAKES operand name
     ENDELSE
 ENDFUNCTION
 
-FUNCTION set operands TAKES digit click event
+FUNCTION set operands TAKES digit text
+    DECLARE newOutput 
     IF result IS NOT empty THEN
         CALL clear function
     ENDIF
-    SET text content to digit node text content
-    DECLARE newOutput 
-    IF operator id is empty THEN
-        SET first operand to its current content plus text content IF NOT +- OR call negate operand function
+    IF operator symbol is empty THEN
+        SET first operand to its current content plus text IF NOT +- OR call negate operand function
         SET newOutput to first operand
     ENDIF
     ELSE
-        SET second operand to its current content plus text content IF NOT +- OR call negate operand function
+        SET second operand to its current content plus text IF NOT +- OR call negate operand function
         SET newOutput to first operand, operator symbol, and second operand
     ENDELSE
     CALL display and PASS output container, and newOutput string
 ENDFUNCTION
 
-FUNCTION set operator TAKES id and symbol
+FUNCTION set operator TAKES text
     SET decimal button disabled to false
-    SET operator id to id
-    SET operator symbol to symbol
+    SET operator symbol to text
     CALL display and PASS output container and first operand plus symbol
 ENDFUNCTION
 
-FUNCTION evaluate operation TAKES operator click event
-    SET operator node to event target
+FUNCTION evaluate operation TAKES operator text
     IF second operand IS NOT empty THEN
         CALL operate on operation object
         SET decimal button disabled to false
@@ -144,9 +141,9 @@ FUNCTION evaluate operation TAKES operator click event
         CALL display and PASS output container and first operand
         
     ENDIF
-    IF first operand IS finite AND operator node is IS NOT equals THEN
+    IF first operand IS finite AND operator text is IS NOT equals THEN
         SET result to empty string
-        CALL set operator and PASS node id and text content
+        CALL set operator and PASS operator text
     ENDIF
 ENDFUNCTION
 
@@ -185,8 +182,10 @@ FUNCTION backspace
     CALL display with active output, and new output
 ENDFUNCTION
 
-FUNCTION edit TAKES edit container click event
-    SET id to edit target id
+FUNCTION edit TAKES edit container edit id
+    IF active output IS an empty string THEN 
+        RETURN out of function
+    ENDIF
     IF id IS clear THEN
         CALL clear function
     ENDIF
@@ -196,28 +195,39 @@ FUNCTION edit TAKES edit container click event
 ENDFUNCTION
 
 LISTEN for digits container click event
-    IF event target is NOT a button THEN
-        RETURN out of function
+    IF event target IS a button THEN
+        IF the digit node IS decimal THEN
+            SET decimal button disabled to true
+        ENDIF
+        CALL set operands and PASS click event text
     ENDIF
-    IF the digit node IS decimal THEN
-        SET decimal button disabled to true
-    ENDIF
-    CALL set operands and PASS click event
 ENDLISTEN
 
 LISTEN for operators container click event
-    IF event target is NOT a button THEN 
-        RETURN out of function
+    IF event target IS a button THEN 
+        CALL evaluate operation and PASS click event text
     ENDIF
-    CALL evaluate operation and PASS click event
 ENDLISTEN
 
 LISTEN for edit container click event
-    IF event target is NOT a button THEN
-        RETURN out of function
+    IF event target IS a button THEN
+        CALL edit function and PASS click event id
     ENDIF
-    IF active output IS NOT an empty string THEN 
-        CALL edit function and PASS click event
-    ENDIf
+ENDLISTEN
+
+LISTEN for document keydown event
+    IF digits includes key THEN
+        IF key is decimal THEN 
+            SET decimal button disabled to true
+        ENDIF
+        CALL set operands function and PASS key
+    ENDIF
+    ELSEIF edit includes key THEN
+        SET id to clear if key is delete OR escape, otherwise set to backspace
+        CALL edit and PASS id
+    ENDELSEIF
+    ELSEIF operators includes key THEN
+        CALL evaluate operation and PASS key
+    ENDELSEIF
 ENDLISTEN
 ```
