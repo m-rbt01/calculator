@@ -156,6 +156,7 @@ FUNCTION clear
             SET current key value to empty string
         ENDIF
     ENDFOR
+    SET decimal button disabled to false
     SET previous operation text content to an empty string
     SET output text content to an empty string
 ENDFUNCTION
@@ -164,7 +165,7 @@ FUNCTION backspace
     DECLARE new output
     IF second operator length IS GREATER THAN zero THEN
         SET array to second operator split to array
-        CALL pop on array
+        CALL pop on array, IF decimal THEN decimal button disabled to false
         SET second operator to array joined to string
         SET new output to first, symbol, and second operator string
     ELSEIF operator id IS NOT empty string
@@ -174,7 +175,7 @@ FUNCTION backspace
     ENDELSEIF
     ELSEIF first operand length IS  GREATER THAN zero THEN
         SET array to first operand split to array
-        CALL pop on array
+        CALL pop on array IF decimal THEN decimal button disabled to false
         SET first operand to array joined to string
         SET new output to first operand
     ENDELSEIF
