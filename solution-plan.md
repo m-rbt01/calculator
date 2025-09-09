@@ -171,6 +171,9 @@ FUNCTION backspace
     ELSEIF operator id IS NOT empty string
         SET operator id to empty string
         SET operator symbol to empty string
+        IF first operand INCLUDES decimal THEN
+            SET decimal disabled to false
+        ENDIF
         SET new output to first operand
     ENDELSEIF
     ELSEIF first operand length IS  GREATER THAN zero THEN
