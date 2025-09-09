@@ -1,4 +1,4 @@
-//Global DOM References
+//GLOBAL DOM REFERENCES
 const previousOperation = document.querySelector("#previous-operation");
 const activeOutput = document.querySelector("#active-output");
 const digitsContainer = document.querySelector(".digits");
@@ -6,7 +6,7 @@ const editContainer = document.querySelector(".edit");
 const operatorsContainer = document.querySelector(".operators");
 const decimalButton = document.querySelector("#decimal");
 
-//Global Constants
+//GLOBAL CONSTANTS
 const OPERATE_KEY = "operate";
 const FIRST_OP_KEY = "firstOperand";
 const SECOND_OP_KEY = "secondOperand";
@@ -21,8 +21,22 @@ const NEGATIVE_SYMBOL = '-';
 const CLEAR_ID = "clear";
 const BACKSPACE_ID = "backspace";
 const MAX_DEC_POINTS = 5;
+const DIGIT_KEYS = "0123456789.";
+const OPERATOR_KEYS = {
+    '/': DIVIDE_SYMBOL,
+    '*': MULTIPLY_SYMBOL,
+    '-': SUBTRACT_SYMBOL,
+    '+': ADD_SYMBOL,
+    '=': EQUALS_SYMBOL,
+    "Enter": EQUALS_SYMBOL
+};
+const EDIT_KEYS = {
+    "Delete": CLEAR_ID,
+    "Escape": CLEAR_ID,
+    "Backspace": BACKSPACE_ID 
+};
 
-//Global Variables
+//GLOBAL VARIABLES
 const operation = {
     firstOperand: '',
     secondOperand: '',
@@ -52,7 +66,7 @@ const operation = {
     }
 };
 
-//Calculator Functions
+//CALCULATOR FUNCTIONS
 function add(firstAddend, secondAddend){
     return firstAddend + secondAddend;
 }
@@ -160,7 +174,7 @@ function edit(editId){
     if(activeOutput.textContent !== '') (editId === CLEAR_ID) ? clear() : backspace();
 }
 
-//Event Listeners
+//EVENT LISTENERS
 digitsContainer.addEventListener("click", (event) => {
     if(event.target instanceof HTMLButtonElement){
         if(event.target === decimalButton) decimalButton.disabled = true;
@@ -172,4 +186,14 @@ operatorsContainer.addEventListener("click", (event) => {
 });
 editContainer.addEventListener("click", (event) => {
     if(event.target instanceof HTMLButtonElement) edit(event.target.id);
+});
+
+document.addEventListener("keydown", (event) => {
+    let key = event.key;
+    if(DIGIT_KEYS.includes(key)){
+        if(key === DECIMAL_SYMBOL) decimalButton.disabled = true;
+        setOperands(key);
+    }
+    else if(key in OPERATOR_KEYS) evaluateOperation(OPERATOR_KEYS[key]);
+    else if(key in EDIT_KEYS) edit(EDIT_KEYS[key]);
 });
