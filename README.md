@@ -10,7 +10,7 @@ This project is intended to showcase input management, data processing, and DOM 
 
 ## Contact
 Christian Donjuan - [LinkedIn](https://www.linkedin.com/in/christian-donjuan/) - chdonjuan.1@gmail.com  
-Live Preview: 
+Live Preview: https://m-rbt01.github.io/calculator/ 
 
 ## Acknowledgements
 This project uses images from the following artists:
