@@ -15,11 +15,12 @@ const EQUALS_ID = "equals";
 const NEGATE_ID = "negate";
 const CLEAR_ID = "clear";
 const BACKSPACE_ID = "backspace";
-const MAX_DEC_POINTS = 5;
 const OPERATE_KEY = "operate";
 const FIRST_OP_KEY = "firstOperand";
 const SECOND_OP_KEY = "secondOperand"; 
+const DECIMAL_SIGN = '.';
 const NEGATIVE_SIGN = '-';
+const MAX_DEC_POINTS = 5;
 
 //Global Variables
 const operation = {
@@ -71,7 +72,7 @@ function divide(dividend, divisor){
 }
 
 function roundToMax(){
-    const fractionalPart = operation.result.toString().split('.')[1];
+    const fractionalPart = operation.result.toString().split(DECIMAL_SIGN)[1];
     if(fractionalPart.length > MAX_DEC_POINTS) operation.result = parseFloat(operation.result.toFixed(MAX_DEC_POINTS));
 }
 
@@ -122,7 +123,7 @@ function evaluateOperation(operator){
         display(activeOutput, operation.firstOperand);
     }
     //set new operator only when not equals, and first operand is valid
-    if((operator.id !== EQUALS_ID) && (operation.firstOperand.length > 0)){
+    if((operator.id !== EQUALS_ID) && (operation.firstOperand.length > 0 && isFinite(operation.firstOperand))){
         operation.result = '';
         setOperator(operator.id, operator.textContent);
     }
@@ -132,6 +133,7 @@ function clear(){
     for(let key in operation){
         if(key !== OPERATE_KEY) operation[key] = '';
     }
+    decimalButton.disabled = false;
     previousOperation.textContent = '';
     activeOutput.textContent = '';
 }
@@ -140,7 +142,7 @@ function backspace(){
     let newOutput;
     if(operation.secondOperand.length > 0){
         let secondArray = operation.secondOperand.split('');
-        secondArray.pop();
+        if(secondArray.pop() === DECIMAL_SIGN) decimalButton.disabled = false;
         operation.secondOperand = secondArray.join('');
         newOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
     }
@@ -151,7 +153,7 @@ function backspace(){
     }
     else{
         let firstArray = operation.firstOperand.split('');
-        firstArray.pop();
+        if(firstArray.pop() === DECIMAL_SIGN) decimalButton.disabled = false;
         operation.firstOperand = firstArray.join('');
         newOutput = operation.firstOperand;
     }
