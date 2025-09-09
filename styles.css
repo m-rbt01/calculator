@@ -33,6 +33,7 @@ body{
     height: 600px;
     padding: 23px;
     border-radius: 5px;
+    border: 5px solid rgba(79, 79, 79, 0.503);
     background-color: rgb(27, 27, 27);
     box-shadow: 10px 10px 25px rgba(146, 255, 146, 0.25);
     display: flex;
@@ -154,9 +155,13 @@ button{
     font-weight: 700;
     border-radius: 5px;
     border: none;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, opacity 0.3s ease;
 }
 
 button:active{
     transform: scale(1.2);
+}
+
+button:hover{
+    opacity: 0.5;
 }
