@@ -17,9 +17,15 @@ const CLEAR_ID = "clear";
 const BACKSPACE_ID = "backspace";
 const OPERATE_KEY = "operate";
 const FIRST_OP_KEY = "firstOperand";
-const SECOND_OP_KEY = "secondOperand"; 
-const DECIMAL_SIGN = '.';
-const NEGATIVE_SIGN = '-';
+const SECOND_OP_KEY = "secondOperand";
+const DECIMAL_SYMBOL = '.';
+const NEGATE_SYMBOL = '±';
+const DIVIDE_SYMBOL = '÷';
+const MULTIPLY_SYMBOL = '×';
+const SUBTRACT_SYMBOL = '−';
+const ADD_SYMBOL = '+';
+const EQUALS_SYMBOL = '=';
+const NEGATIVE_SYMBOL = '-';
 const MAX_DEC_POINTS = 5;
 
 //Global Variables
@@ -72,7 +78,7 @@ function divide(dividend, divisor){
 }
 
 function roundToMax(){
-    const fractionalPart = operation.result.toString().split(DECIMAL_SIGN)[1];
+    const fractionalPart = operation.result.toString().split(DECIMAL_SYMBOL)[1];
     if(fractionalPart.length > MAX_DEC_POINTS) operation.result = parseFloat(operation.result.toFixed(MAX_DEC_POINTS));
 }
 
@@ -84,11 +90,11 @@ function display(displayContainer, output){
 }
 
 function negateOperand(operandKey){
-    if(operation[operandKey][0] === NEGATIVE_SIGN){
+    if(operation[operandKey][0] === NEGATIVE_SYMBOL){
         operation[operandKey] = operation[operandKey].substring(1);
     }
     else if(operation[operandKey].length > 0){
-        operation[operandKey] = NEGATIVE_SIGN + operation[operandKey];
+        operation[operandKey] = NEGATIVE_SYMBOL + operation[operandKey];
     }
 }
 
@@ -142,19 +148,19 @@ function backspace(){
     let newOutput;
     if(operation.secondOperand.length > 0){
         let secondArray = operation.secondOperand.split('');
-        if(secondArray.pop() === DECIMAL_SIGN) decimalButton.disabled = false;
+        if(secondArray.pop() === DECIMAL_SYMBOL) decimalButton.disabled = false;
         operation.secondOperand = secondArray.join('');
         newOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
     }
     else if(operation.id !== ''){
         operation.id = '';
         operation.symbol = '';
-        if(operation.firstOperand.includes(DECIMAL_SIGN)) decimalButton.disabled = true;
+        if(operation.firstOperand.includes(DECIMAL_SYMBOL)) decimalButton.disabled = true;
         newOutput = operation.firstOperand;
     }
     else{
         let firstArray = operation.firstOperand.split('');
-        if(firstArray.pop() === DECIMAL_SIGN) decimalButton.disabled = false;
+        if(firstArray.pop() === DECIMAL_SYMBOL) decimalButton.disabled = false;
         operation.firstOperand = firstArray.join('');
         newOutput = operation.firstOperand;
     }
