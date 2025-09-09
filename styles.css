@@ -16,7 +16,6 @@ html{
 
 body{
     min-height: 100vh;
-    border: 4px solid green;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -47,6 +46,10 @@ body{
 
 .header, .footer{
     color: rgb(255, 255, 255, 0.75);
+}
+
+.footer img{
+    max-height: 15px;
 }
 
 /*---calculator children---*/
