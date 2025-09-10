@@ -105,18 +105,12 @@ function negateOperand(operandKey){
 }
 
 function setOperands(digitString){
-    let operandOutput;
-    //reset calculator after a completed operation or divide by zero attempt
-    if(operation.result !== '') clear(); 
-    if(operation.symbol === ''){ //concatenate first operand if no operator is present
-        (digitString === NEGATE_SYMBOL) ? negateOperand(FIRST_OP_KEY) : operation.firstOperand += digitString;
-        operandOutput = operation.firstOperand;
-    }
-    else{ //otherwise, concatenate the second operand
-        (digitString === NEGATE_SYMBOL) ? negateOperand(SECOND_OP_KEY) : operation.secondOperand += digitString;
-        operandOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
-    }
-    display(activeOutput, operandOutput);
+    if(operation.result !== '') clear(); //reset calculator after a completed operation
+    let newOutput;
+    let currentOperand = (operation.symbol === '') ? FIRST_OP_KEY : SECOND_OP_KEY;
+    (digitString === NEGATE_SYMBOL) ? negateOperand(currentOperand) : operation[currentOperand] += digitString;
+    newOutput = (currentOperand === FIRST_OP_KEY) ? operation.firstOperand : `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
+    display(activeOutput, newOutput);
 }
 
 function setOperator(operatorString){
