@@ -183,10 +183,16 @@ digitsContainer.addEventListener("click", (event) => {
     }
 });
 operatorsContainer.addEventListener("click", (event) => {
-    if(event.target instanceof HTMLButtonElement) evaluateOperation(event.target.textContent);
+    if(event.target instanceof HTMLButtonElement){
+        event.target.blur();
+        evaluateOperation(event.target.textContent);
+    }
 });
 editContainer.addEventListener("click", (event) => {
-    if(event.target instanceof HTMLButtonElement) edit(event.target.id);
+    if(event.target instanceof HTMLButtonElement){
+        event.target.blur();
+        edit(event.target.id);
+    }
 });
 
 document.addEventListener("keydown", (event) => {
