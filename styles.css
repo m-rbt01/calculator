@@ -31,7 +31,7 @@ body{
 .calculator{
     width: 400px;
     height: 600px;
-    padding: 23px;
+    padding: 35px 20px 60px;
     border-radius: 5px;
     background-color: rgb(27, 27, 27);
     box-shadow: 10px 10px 30px black;
