@@ -59,7 +59,7 @@ const operation = {
                 this.result = divide(this.firstOperand, this.secondOperand);
         }
         if((isFinite(this.result)) && (!Number.isInteger(this.result))) roundToMax(); //round only if floating-point result
-        //reset operands
+        //reset operation
         this.firstOperand = this.result.toString();
         this.secondOperand = '';
         this.symbol = '';
@@ -177,6 +177,7 @@ function edit(editId){
 //EVENT LISTENERS
 digitsContainer.addEventListener("click", (event) => {
     if(event.target instanceof HTMLButtonElement){
+        event.target.blur();
         if(event.target === decimalButton) decimalButton.disabled = true;
         setOperands(event.target.textContent);
     }
