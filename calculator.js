@@ -4,12 +4,12 @@ const activeOutput = document.querySelector("#active-output");
 const digitsContainer = document.querySelector(".digits");
 const editContainer = document.querySelector(".edit");
 const operatorsContainer = document.querySelector(".operators");
-const decimalButton = document.querySelector("#decimal");
 
 //GLOBAL CONSTANTS
 const OPERATE_KEY = "operate";
 const FIRST_OP_KEY = "firstOperand";
 const SECOND_OP_KEY = "secondOperand";
+const OP_SYMBOL_KEY = "symbol";
 const DECIMAL_SYMBOL = '.';
 const NEGATE_SYMBOL = '±';
 const DIVIDE_SYMBOL = '÷';
@@ -21,8 +21,8 @@ const NEGATIVE_SYMBOL = '-';
 const CLEAR_ID = "clear";
 const BACKSPACE_ID = "backspace";
 const MAX_DEC_POINTS = 5;
-const DIGIT_KEYS = "0123456789.";
-const OPERATOR_KEYS = {
+const DIGIT_KEYBOARD = "0123456789.";
+const OPERATOR_KEYBOARD = {
     '/': DIVIDE_SYMBOL,
     '*': MULTIPLY_SYMBOL,
     '-': SUBTRACT_SYMBOL,
@@ -30,7 +30,7 @@ const OPERATOR_KEYS = {
     '=': EQUALS_SYMBOL,
     "Enter": EQUALS_SYMBOL
 };
-const EDIT_KEYS = {
+const EDIT_KEYBOARD = {
     "Delete": CLEAR_ID,
     "Escape": CLEAR_ID,
     "Backspace": BACKSPACE_ID 
@@ -97,24 +97,34 @@ function display(displayContainer, output){
 
 function negateOperand(operandKey){
     if(operation[operandKey][0] === NEGATIVE_SYMBOL){
-        operation[operandKey] = operation[operandKey].substring(1);
+        operation[operandKey] = operation[operandKey].slice(1);
     }
     else if(operation[operandKey].length > 0){
         operation[operandKey] = NEGATIVE_SYMBOL + operation[operandKey];
     }
 }
 
+function checkIsDecimal(operandKey){
+    return operation[operandKey].includes(DECIMAL_SYMBOL);
+}
+
 function setOperands(digitString){
     if(operation.result !== '') clear(); //reset calculator after a completed operation
-    let newOutput;
     let currentOperand = (operation.symbol === '') ? FIRST_OP_KEY : SECOND_OP_KEY;
-    (digitString === NEGATE_SYMBOL) ? negateOperand(currentOperand) : operation[currentOperand] += digitString;
-    newOutput = (currentOperand === FIRST_OP_KEY) ? operation.firstOperand : `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
+    switch(digitString){
+        case NEGATE_SYMBOL:
+            negateOperand(currentOperand);
+            break;
+        case DECIMAL_SYMBOL:
+            if(checkIsDecimal(currentOperand)) return;
+        default:
+            operation[currentOperand] += digitString;
+    }
+    let newOutput = (currentOperand === FIRST_OP_KEY) ? operation.firstOperand : `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
     display(activeOutput, newOutput);
 }
 
 function setOperator(operatorString){
-    decimalButton.disabled = false;
     operation.symbol = operatorString;
     display(activeOutput, `${operation.firstOperand} ${operation.symbol}`);
 }
@@ -122,7 +132,6 @@ function setOperator(operatorString){
 function evaluateOperation(operatorString){
     if(operation.secondOperand.length > 0){ //operate when both operands are present
         operation.operate();
-        decimalButton.disabled = false;
         display(previousOperation, activeOutput.textContent);
         display(activeOutput, operation.firstOperand);
     }
@@ -137,30 +146,14 @@ function clear(){
     for(let key in operation){
         if(key !== OPERATE_KEY) operation[key] = '';
     }
-    decimalButton.disabled = false;
     previousOperation.textContent = '';
     activeOutput.textContent = '';
 }
 
 function backspace(){
-    let newOutput;
-    if(operation.secondOperand.length > 0){ //backspace from second operand
-        let secondArray = operation.secondOperand.split('');
-        if(secondArray.pop() === DECIMAL_SYMBOL) decimalButton.disabled = false;
-        operation.secondOperand = secondArray.join('');
-        newOutput = `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}`;
-    }
-    else if(operation.symbol !== ''){ //backspace from operator
-        operation.symbol = '';
-        if(operation.firstOperand.includes(DECIMAL_SYMBOL)) decimalButton.disabled = true;
-        newOutput = operation.firstOperand;
-    }
-    else{ //backspace from first operand
-        let firstArray = operation.firstOperand.split('');
-        if(firstArray.pop() === DECIMAL_SYMBOL) decimalButton.disabled = false;
-        operation.firstOperand = firstArray.join('');
-        newOutput = operation.firstOperand;
-    }
+    let currentKey = (operation.secondOperand.length > 0) ? SECOND_OP_KEY : (operation.symbol !== '') ? OP_SYMBOL_KEY : FIRST_OP_KEY; 
+    operation[currentKey] = operation[currentKey].slice(0, -1);
+    let newOutput = (currentKey === SECOND_OP_KEY) ? `${operation.firstOperand} ${operation.symbol} ${operation.secondOperand}` : operation.firstOperand;
     display(activeOutput, newOutput);
 }
 
@@ -172,7 +165,6 @@ function edit(editId){
 digitsContainer.addEventListener("click", (event) => {
     if(event.target instanceof HTMLButtonElement){
         event.target.blur();
-        if(event.target === decimalButton) decimalButton.disabled = true;
         setOperands(event.target.textContent);
     }
 });
@@ -191,10 +183,7 @@ editContainer.addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
     let key = event.key;
-    if(DIGIT_KEYS.includes(key)){
-        if(key === DECIMAL_SYMBOL) decimalButton.disabled = true;
-        setOperands(key);
-    }
-    else if(key in OPERATOR_KEYS) evaluateOperation(OPERATOR_KEYS[key]);
-    else if(key in EDIT_KEYS) edit(EDIT_KEYS[key]);
+    if(DIGIT_KEYBOARD.includes(key)) setOperands(key);
+    else if(key in OPERATOR_KEYBOARD) evaluateOperation(OPERATOR_KEYBOARD[key]);
+    else if(key in EDIT_KEYBOARD) edit(EDIT_KEYBOARD[key]);
 });
