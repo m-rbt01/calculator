@@ -45,13 +45,13 @@ Create a calculator program that evaluates a single arithmetic operation at a ti
 7. After a result, clear the display when digits are pressed
 
 ### ALGORITHM
-```
-SET global operation object holding:
+```js
+SET global operation object
     first operand variable
     second operand variable
     operator symbol variable
     result variable
-    operate function:
+    FUNCTION operate:
         CONVERT first operand into a number
         CONVERT second operand into a number
         CASE operator symbol OF
@@ -67,7 +67,7 @@ SET global operation object holding:
         SET second operand to empty string
         SET symbol to empty string
 SET global previous operation to DOM previous operation div
-SET global output to DOM output div
+SET global active output to DOM output div
 SET global digits to DOM digits container
 SET global operators to DOM operators container
 SET global edit to DOM edit container
@@ -97,9 +97,9 @@ FUNCTION divide TAKES a dividend and a divisor
 ENDFUNCTION
 
 FUNCTION display TAKES display node and string output
-    SET display node's text content to the string output
-    SET right offset to display node's scroll width minus its visible width
-    SET display node's scroll left position to the right offset
+    SET display node text content to the string output
+    SET right offset to display node scroll-width minus its visible-width
+    SET display node scroll left position to the right offset
 ENDFUNCTION
 
 FUNCTION negate Operand TAKES operand name
@@ -111,24 +111,25 @@ FUNCTION negate Operand TAKES operand name
     ENDELSE
 ENDFUNCTION
 
+FUNCTION check is decimal TAKES operand name
+    RETURN result of IF given operand INCLUDES decimal
+ENDFUNCTION
+
 FUNCTION set operands TAKES digit text
-    DECLARE newOutput 
     IF result IS NOT empty THEN
         CALL clear function
     ENDIF
-    IF operator symbol is empty THEN
-        SET first operand to its current content plus text IF NOT +- OR call negate operand function
-        SET newOutput to first operand
-    ENDIF
-    ELSE
-        SET second operand to its current content plus text IF NOT +- OR call negate operand function
-        SET newOutput to first operand, operator symbol, and second operand
-    ENDELSE
-    CALL display and PASS output container, and newOutput string
+    SET current operand name to first operand IF symbol is empty, OR second operand
+    CASE digit text OF
+        NEGATE: call NEGATE
+        DECIMAL: IF call CHECK IS DECIMAL is true THEN return
+        OTHERS: current operand is set to itself plus digit text
+    ENDCASE
+    SET newOutput to first operand IF current operand is first, OR include operator symbol and second operand
+    CALL display and PASS output container, and new output
 ENDFUNCTION
 
 FUNCTION set operator TAKES text
-    SET decimal button disabled to false
     SET operator symbol to text
     CALL display and PASS output container and first operand plus symbol
 ENDFUNCTION
@@ -136,7 +137,6 @@ ENDFUNCTION
 FUNCTION evaluate operation TAKES operator text
     IF second operand IS NOT empty THEN
         CALL operate on operation object
-        SET decimal button disabled to false
         CALL display and PASS previous operation container and output text content
         CALL display and PASS output container and first operand
         
@@ -153,32 +153,14 @@ FUNCTION clear
             SET current key value to empty string
         ENDIF
     ENDFOR
-    SET decimal button disabled to false
     SET previous operation text content to an empty string
     SET output text content to an empty string
 ENDFUNCTION
 
 FUNCTION backspace
-    DECLARE new output
-    IF second operator length IS GREATER THAN zero THEN
-        SET array to second operator split to array
-        CALL pop on array, IF decimal THEN decimal button disabled to false
-        SET second operator to array joined to string
-        SET new output to first, symbol, and second operator string
-    ELSEIF operator id IS NOT empty string
-        SET operator id to empty string
-        SET operator symbol to empty string
-        IF first operand INCLUDES decimal THEN
-            SET decimal disabled to false
-        ENDIF
-        SET new output to first operand
-    ENDELSEIF
-    ELSEIF first operand length IS  GREATER THAN zero THEN
-        SET array to first operand split to array
-        CALL pop on array IF decimal THEN decimal button disabled to false
-        SET first operand to array joined to string
-        SET new output to first operand
-    ENDELSEIF
+    SET current key to IS second operator length IS GREATER THAN zero? THEN second operand key. OR IS symbol empty? THEN symbol key. OR first operand key
+    SET current key to itself SLICED to the last character
+    SET new output to IS current key second operand? THEN full operation. OR first operand
     CALL display with active output, and new output
 ENDFUNCTION
 
@@ -196,30 +178,27 @@ ENDFUNCTION
 
 LISTEN for digits container click event
     IF event target IS a button THEN
-        IF the digit node IS decimal THEN
-            SET decimal button disabled to true
-        ENDIF
+        REMOVE focus from target
         CALL set operands and PASS click event text
     ENDIF
 ENDLISTEN
 
 LISTEN for operators container click event
     IF event target IS a button THEN 
+        REMOVE focus from target
         CALL evaluate operation and PASS click event text
     ENDIF
 ENDLISTEN
 
 LISTEN for edit container click event
     IF event target IS a button THEN
+        REMOVE focus from target
         CALL edit function and PASS click event id
     ENDIF
 ENDLISTEN
 
 LISTEN for document keydown event
     IF digits includes key THEN
-        IF key is decimal THEN 
-            SET decimal button disabled to true
-        ENDIF
         CALL set operands function and PASS key
     ENDIF
     ELSEIF edit includes key THEN
