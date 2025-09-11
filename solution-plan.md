@@ -55,10 +55,10 @@ SET global operation object
         CONVERT first operand into a number
         CONVERT second operand into a number
         CASE operator symbol OF
-            ADDITION: call add function with operands, set to result
-            SUBTRACTION: call subtract function with operands, set to result
-            MULTIPLICATION: call multiply  with operands, set to result
-            DIVISION: call divide with operands, set to result
+            ADDITION: add operands, set to result
+            SUBTRACTION: subtract operands, set to result
+            MULTIPLICATION: multiply operands, set to result
+            DIVISION: divide operands, set to result
         ENDCASE
         IF result IS NOT an integer and IS finite THEN
             CALL to round to max
@@ -73,33 +73,17 @@ SET global operators to DOM operators container
 SET global edit to DOM edit container
 SET global decimal button node to DOM button
 
+FUNCTION display TAKES display node and string output
+    SET display node text content to the string output
+    SET right offset to display node scroll-width minus its visible-width
+    SET display node scroll left position to the right offset
+ENDFUNCTION
+
 FUNCTION round to Max
     SET fractional part to operation result, to string, split by the decimal point
     IF the fractional portion of the result IS GREATER THAN the max limit THEN
         CALL to fixed on the result with max limit decimal points, and parse to float
     ENDIF
-ENDFUNCTION
-
-FUNCTION add TAKES two addends
-    RETURN the sum of both addends
-ENDFUNCTION
-
-FUNCTION subtract TAKES a minuend and a subtrahend
-    RETURN the difference of minuend minus subtrahend
-ENDFUNCTION
-
-FUNCTION multiply TAKES a multiplicand and a multiplier
-    RETURN the product of multiplying multiplicand by multiplier
-ENDFUNCTION
-
-FUNCTION divide TAKES a dividend and a divisor
-    RETURN the quotient of dividing dividend by divisor
-ENDFUNCTION
-
-FUNCTION display TAKES display node and string output
-    SET display node text content to the string output
-    SET right offset to display node scroll-width minus its visible-width
-    SET display node scroll left position to the right offset
 ENDFUNCTION
 
 FUNCTION negate Operand TAKES operand name
@@ -112,7 +96,11 @@ FUNCTION negate Operand TAKES operand name
 ENDFUNCTION
 
 FUNCTION check is decimal TAKES operand name
-    RETURN result of IF given operand INCLUDES decimal
+    RETURN result of does given operand INCLUDE decimal?
+ENDFUNCTION
+
+FUNCTION check is valid number TAKES operand name
+    RETURN result of is operand non-empty string AND finite number?
 ENDFUNCTION
 
 FUNCTION set operands TAKES digit text
@@ -122,7 +110,7 @@ FUNCTION set operands TAKES digit text
     SET current operand name to first operand IF symbol is empty, OR second operand
     CASE digit text OF
         NEGATE: call NEGATE
-        DECIMAL: IF call CHECK IS DECIMAL is true THEN return
+        DECIMAL: IF call CHECK IS DECIMAL is true THEN return 
         OTHERS: current operand is set to itself plus digit text
     ENDCASE
     SET newOutput to first operand IF current operand is first, OR include operator symbol and second operand
@@ -135,13 +123,13 @@ FUNCTION set operator TAKES text
 ENDFUNCTION
 
 FUNCTION evaluate operation TAKES operator text
-    IF second operand IS NOT empty THEN
+    IF check is valid number IS true for second operand THEN
         CALL operate on operation object
         CALL display and PASS previous operation container and output text content
         CALL display and PASS output container and first operand
         
     ENDIF
-    IF first operand IS finite AND operator text is IS NOT equals THEN
+    IF operator text is IS NOT equals AND check is valid number IS true for first operand THEN
         SET result to empty string
         CALL set operator and PASS operator text
     ENDIF
@@ -165,15 +153,14 @@ FUNCTION backspace
 ENDFUNCTION
 
 FUNCTION edit TAKES edit container edit id
-    IF active output IS an empty string THEN 
-        RETURN out of function
+    IF active output IS NOT an empty string THEN 
+        IF id IS clear THEN
+            CALL clear function
+        ENDIF
+        ELSEIF id IS backspace THEN
+            CALL backspace function
+        ENDELSEIF
     ENDIF
-    IF id IS clear THEN
-        CALL clear function
-    ENDIF
-    ELSEIF id IS backspace THEN
-        CALL backspace function
-    ENDELSEIF
 ENDFUNCTION
 
 LISTEN for digits container click event
