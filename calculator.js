@@ -105,6 +105,7 @@ function setOperands(digitString){
             break;
         case DECIMAL_SYMBOL:
             if(checkIsDecimal(currentOperand)) return;
+            if(!checkIsValidNum(currentOperand)) operation[currentOperand] = '0';
         default:
             operation[currentOperand] += digitString;
     }
