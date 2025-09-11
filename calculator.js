@@ -157,12 +157,14 @@ digitsContainer.addEventListener("click", (event) => {
         setOperands(event.target.textContent);
     }
 });
+
 operatorsContainer.addEventListener("click", (event) => {
     if(event.target instanceof HTMLButtonElement){
         event.target.blur();
         evaluateOperation(event.target.textContent);
     }
 });
+
 editContainer.addEventListener("click", (event) => {
     if(event.target instanceof HTMLButtonElement){
         event.target.blur();
