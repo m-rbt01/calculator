@@ -47,16 +47,16 @@ const operation = {
         this.secondOperand = +this.secondOperand;
         switch(this.symbol){
             case ADD_SYMBOL:
-                this.result = add(this.firstOperand, this.secondOperand);
+                this.result = this.firstOperand + this.secondOperand;
                 break;
             case SUBTRACT_SYMBOL:
-                this.result = subtract(this.firstOperand, this.secondOperand);
+                this.result = this.firstOperand - this.secondOperand;
                 break;
             case MULTIPLY_SYMBOL:
-                this.result = multiply(this.firstOperand, this.secondOperand);
+                this.result = this.firstOperand * this.secondOperand;
                 break;
             case DIVIDE_SYMBOL:
-                this.result = divide(this.firstOperand, this.secondOperand);
+                this.result = this.firstOperand / this.secondOperand;
         }
         if((isFinite(this.result)) && (!Number.isInteger(this.result))) roundToMax(); //round only if floating-point result
         //reset operation
@@ -67,22 +67,6 @@ const operation = {
 };
 
 //CALCULATOR FUNCTIONS
-function add(firstAddend, secondAddend){
-    return firstAddend + secondAddend;
-}
-
-function subtract(minuend, subtrahend){
-    return minuend - subtrahend;
-}
-
-function multiply(multiplicand, multiplier){
-    return multiplicand * multiplier;
-}
-
-function divide(dividend, divisor){
-    return dividend / divisor;
-}
-
 function roundToMax(){
     const fractionalPart = operation.result.toString().split(DECIMAL_SYMBOL)[1];
     if(fractionalPart.length > MAX_DEC_POINTS) operation.result = parseFloat(operation.result.toFixed(MAX_DEC_POINTS));
