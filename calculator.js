@@ -67,16 +67,16 @@ const operation = {
 };
 
 //CALCULATOR FUNCTIONS
-function roundToMax(){
-    const fractionalPart = operation.result.toString().split(DECIMAL_SYMBOL)[1];
-    if(fractionalPart.length > MAX_DEC_POINTS) operation.result = parseFloat(operation.result.toFixed(MAX_DEC_POINTS));
-}
-
 function display(displayContainer, output){
     displayContainer.textContent = output;
     //scroll display to right
     const RIGHT_OFFSET = displayContainer.scrollWidth - displayContainer.clientWidth;
     displayContainer.scrollLeft = RIGHT_OFFSET;
+}
+
+function roundToMax(){
+    const fractionalPart = operation.result.toString().split(DECIMAL_SYMBOL)[1];
+    if(fractionalPart.length > MAX_DEC_POINTS) operation.result = parseFloat(operation.result.toFixed(MAX_DEC_POINTS));
 }
 
 function negateOperand(operandKey){
@@ -90,6 +90,10 @@ function negateOperand(operandKey){
 
 function checkIsDecimal(operandKey){
     return operation[operandKey].includes(DECIMAL_SYMBOL);
+}
+
+function checkIsValidNum(operandKey){
+    return (operation[operandKey].length > 0) && (isFinite(operation[operandKey]));
 }
 
 function setOperands(digitString){
@@ -114,13 +118,13 @@ function setOperator(operatorString){
 }
 
 function evaluateOperation(operatorString){
-    if(operation.secondOperand.length > 0){ //operate when both operands are present
+    if(checkIsValidNum(SECOND_OP_KEY)){ //operate only when second operand is valid
         operation.operate();
         display(previousOperation, activeOutput.textContent);
         display(activeOutput, operation.firstOperand);
     }
     //set new operator only when not equals, and first operand is valid
-    if((operatorString !== EQUALS_SYMBOL) && (operation.firstOperand.length > 0 && isFinite(operation.firstOperand))){
+    if((operatorString !== EQUALS_SYMBOL) && (checkIsValidNum(FIRST_OP_KEY))){
         operation.result = '';
         setOperator(operatorString);
     }
