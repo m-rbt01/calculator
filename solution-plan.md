@@ -110,7 +110,7 @@ FUNCTION set operands TAKES digit text
     SET current operand name to first operand IF symbol is empty, OR second operand
     CASE digit text OF
         NEGATE: call NEGATE
-        DECIMAL: IF call CHECK IS DECIMAL is true THEN return 
+        DECIMAL: IF call CHECK IS DECIMAL is true THEN return, OR set operand to 0 if not a valid number
         OTHERS: current operand is set to itself plus digit text
     ENDCASE
     SET newOutput to first operand IF current operand is first, OR include operator symbol and second operand
